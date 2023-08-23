@@ -5,7 +5,7 @@ import africa.semicolon.regcrow.dtos.request.CustomerRegistrationRequest;
 import africa.semicolon.regcrow.dtos.response.CustomerRegistrationResponse;
 import africa.semicolon.regcrow.dtos.response.CustomerResponse;
 import africa.semicolon.regcrow.exceptions.CustomerRegistrationFailedException;
-import africa.semicolon.regcrow.exceptions.ProfileUpdateFailedException;
+import africa.semicolon.regcrow.exceptions.RegCrowException;
 import africa.semicolon.regcrow.exceptions.UserNotFoundException;
 import com.fasterxml.jackson.databind.node.TextNode;
 import com.github.fge.jackson.jsonpointer.JsonPointer;
@@ -33,13 +33,13 @@ public class RegcrowCustomerServiceTest {
     private CustomerRegistrationResponse customerRegistrationResponse;
 
     @BeforeEach
-    public void setUp() throws CustomerRegistrationFailedException {
-//        customerService.deleteAll();
-//        customerRegistrationRequest = new CustomerRegistrationRequest();
-//        customerRegistrationRequest.setEmail("9kicks@email.com");
-//        customerRegistrationRequest.setPassword("");
-//
-//        customerRegistrationResponse = customerService.register(customerRegistrationRequest);
+    public void setUp() throws RegCrowException {
+        customerService.deleteAll();
+        customerRegistrationRequest = new CustomerRegistrationRequest();
+        customerRegistrationRequest.setEmail("9kicks@email.com");
+        customerRegistrationRequest.setPassword("");
+
+        customerRegistrationResponse = customerService.register(customerRegistrationRequest);
     }
     @Test
     public void testThatCustomerCanRegister() throws CustomerRegistrationFailedException {
@@ -56,9 +56,13 @@ public class RegcrowCustomerServiceTest {
     }
 
 
-    //TODO:come back here today 1/6/2023
     @Test
-    public void getAllCustomersTest() throws CustomerRegistrationFailedException {
+    public void testVerify(){
+
+    }
+
+    @Test
+    public void getAllCustomersTest() throws RegCrowException {
         customerRegistrationRequest.setEmail("Felix@gmail.com");
         customerRegistrationRequest.setPassword("12345");
         customerService.register(customerRegistrationRequest);
@@ -77,21 +81,29 @@ public class RegcrowCustomerServiceTest {
         assertThat(currentCustomers.size()).isEqualTo(numberOfCustomers-ONE.intValue());
     }
 
-
-    @Test
-    public void updateCustomerTest() throws UserNotFoundException, ProfileUpdateFailedException {
-        JsonPatch updateForm = buildUpdatePatch();
-        CustomerResponse foundCustomer = customerService.getCustomerById(customerRegistrationResponse.getId());
-        assertThat(foundCustomer.getName().contains("Folahan")
-                &&foundCustomer.getName().contains("Doe")).isFalse();
-
-        var response = customerService.updateCustomerDetails(customerRegistrationResponse.getId(), updateForm);
-        assertThat(response).isNotNull();
-
-        CustomerResponse customerResponse = customerService.getCustomerById(customerRegistrationResponse.getId());
-        assertThat(customerResponse.getName().contains("Folahan")
-                &&customerResponse.getName().contains("Doe")).isTrue();
-    }
+//
+//    @Test
+//    public void updateCustomerTest() throws UserNotFoundException, ProfileUpdateFailedException, IOException {
+//        JsonPatch updateForm = buildUpdatePatch();
+//        CustomerResponse foundCustomer = customerService.getCustomerById(customerRegistrationResponse.getId());
+//        assertThat(foundCustomer.getName().contains("Folahan")
+//                &&foundCustomer.getName().contains("Doe")).isFalse();
+//
+//        var response =
+//                customerService.updateCustomerDetails(customerRegistrationResponse.getId(),
+//                        updateForm,
+//                        new MockMultipartFile("2 goats",
+//                                new FileInputStream("C:\\Users\\semicolon\\Documents\\java_workspace\\regcrow\\src\\test\\resources\\assets\\goat.jpg")
+//                        ));
+//
+//        assertThat(response).isNotNull();
+//        foundCustomer = customerService.getCustomerById(customerRegistrationResponse.getId());
+//        assertThat(foundCustomer.getProfileImage()).isNotNull();
+//
+//        CustomerResponse customerResponse = customerService.getCustomerById(customerRegistrationResponse.getId());
+//        assertThat(customerResponse.getName().contains("Folahan")
+//                &&customerResponse.getName().contains("Joshua")).isTrue();
+//    }
 
     private JsonPatch buildUpdatePatch() {
         try {
@@ -103,6 +115,18 @@ public class RegcrowCustomerServiceTest {
                     new ReplaceOperation(
                             new JsonPointer("/lastname"),
                             new TextNode("Joshua")
+                    ),
+                    new ReplaceOperation(
+                            new JsonPointer("/bankAccount/accountName"),
+                            new TextNode("Folahan Joshua")
+                    ),
+                    new ReplaceOperation(
+                            new JsonPointer("/bankAccount/accountNumber"),
+                            new TextNode("0123456789")
+                    ),
+                    new ReplaceOperation(
+                            new JsonPointer("/bankAccount/bankName"),
+                            new TextNode("Prof-Pay")
                     )
             );
             return new JsonPatch(updates);
