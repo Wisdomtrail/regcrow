@@ -22,7 +22,6 @@ public class SendInBlueMailServiceTest {
         Sender sender = new Sender("regcrow inc.", "noreply@regcrow.com");
 
         Recipient recipient = new Recipient("Tinu", "recelo5446@vaband.com");
-
         EmailNotificationRequest emailNotificationRequest = new EmailNotificationRequest();
         emailNotificationRequest.setEmailSender(sender);
         emailNotificationRequest.setRecipients(Set.of(recipient));

@@ -38,6 +38,4 @@ public class BeanConfig {
     public MailConfig mailConfig(){
         return new MailConfig(mailApiKey);
     }
-
-
 }

@@ -2,22 +2,27 @@ package africa.semicolon.regcrow.services.cloud;
 
 
 import africa.semicolon.regcrow.exceptions.ImageUploadFailedException;
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
 import java.io.IOException;
 import java.util.Map;
 
 import static africa.semicolon.regcrow.utils.AppUtils.CLOUDINARY_IMAGE_URL;
 
+
 @Service
 @AllArgsConstructor
 @Slf4j
 public class CloudinaryCloudService implements CloudService{
-   private final Cloudinary cloudinary;
+
+    private final Cloudinary cloudinary;
+
 
     @Override
     public String upload(byte[] image) throws ImageUploadFailedException{

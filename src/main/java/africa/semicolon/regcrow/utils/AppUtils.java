@@ -5,7 +5,7 @@ import org.springframework.data.domain.Pageable;
 
 public class AppUtils {
 
-    public static final int ONE = 1;
+    public static final int  ONE = 1;
     public static final int FOUR = 4;
 
     public static final int ZERO = 0;
